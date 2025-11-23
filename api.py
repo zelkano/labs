@@ -133,7 +133,9 @@ for i in serverandvirtual:
         if found == False:
             print(f"Virtual Server {i}:{x} - not found in any pools")
 
-    
+
+print("\n---------- END ------------\n")
+
 quit()
 
 print("\n---------\n")

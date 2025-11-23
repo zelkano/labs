@@ -1,6 +1,7 @@
 exec(open('0_global_vars.py').read())
 
 poolandmember={}
+serverandvirtual={}
 
 uzn = input("Enter Username:")
 paz = getpass.getpass("Enter Password:")
@@ -31,7 +32,7 @@ for t in pool:
         memname = xy['name']
         print(f'Name: {memname}')
         memlist.append(memname)
-    #print(f'{t['name']} - {t['membersReference']['link']}')
+    
 
     poolandmember[t['name']] = {"Members" : memlist}
 
@@ -41,12 +42,9 @@ for t in pool:
 print("\n\n---\n")
 
 for i in poolandmember:
+
     print(poolandmember[i]['Members'][0])
 
-
-#print(poolandmember['B_pool_mixed'][0])
-
-quit()
 
 
 ## connect and get the virtual servers
@@ -57,9 +55,9 @@ servers = json.dumps(outs, indent=4)
 
 ## count how many GTM servers there are
 numserv = len(outs['items'])
+
 print(f'there are {numserv} Servers found on the GTM')
 
-aa = input("press any key to continue..\n")
 
 for x in outs['items']:
     servName = x['name']
@@ -80,7 +78,8 @@ for x in outs['items']:
 
     print(f'\nthere are {numvs} Servers found on {servName}\n')
 
-    aa = input("press any key to View Virtual Servers..\n")
+    
+    servlist=[]
 
     for tt in outsvs['items']:
         vsName = tt['name']
@@ -96,8 +95,40 @@ for x in outs['items']:
 
 
         print(f'Name: {vsName}:{vsDest}\nMonitor: {vsMon}')
+        servlist.append(vsName)
+
+    serverandvirtual[servName] = {'Members' : servlist}
 
     #print(vslist)
 
 print("-----------------------------\n")
+
+for i in serverandvirtual:
+    #print(f"{i} -- {serverandvirtual[i]['Members']}")
+    
+    for x in serverandvirtual[i]['Members']:
+        found = False
+        print(f"searchign for {x}")
+
+        for k in poolandmember:
+            #print(f"{i} -- {poolandmember[i]['Members']}")
+            for y in poolandmember[k]['Members']:
+                if x in y:
+                    print(f"Server found in pool {k}")
+                    found = True
+                    break
+        
+
+        if found == False:
+            print(f"Virtual Server {x} - not found in any pools")
+
+    
+quit()
+
+print("\n---------\n")
+
+for i in poolandmember:
+    print(f"{i} -- {poolandmember[i]['Members']}")
+    for x in poolandmember[i]['Members']:
+        print(x)
 
